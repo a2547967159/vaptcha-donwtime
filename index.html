@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://bootswatch.com/4/lux/bootstrap.css">
+    <style>
+        .vaptcha-container {
+            width: 100%;
+            height: 36px;
+            line-height: 36px;
+            text-align: center;
+        }
+
+        .vaptcha-init-main {
+            display: table;
+            width: 100%;
+            height: 100%;
+            background-color: #EEEEEE;
+        }
+
+        ​ .vaptcha-init-loading {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center
+        }
+
+        ​ .vaptcha-init-loading>a {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: none;
+        }
+
+        ​ .vaptcha-init-loading>a img {
+            vertical-align: middle
+        }
+
+        ​ .vaptcha-init-loading .vaptcha-text {
+            font-family: sans-serif;
+            font-size: 12px;
+            color: #CCCCCC;
+            vertical-align: middle
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="row justify-content-md-center mt-5">
+        <div class="col-lg-4 card">
+            <div class="card-body">
+                <div class="alert alert-success" style="display: none">
+                </div>
+                <div class="form-group vaptcha-container">
+                    <!--vaptcha-container是用来引入VAPTCHA的容器，下面代码为预加载动画，仅供参考-->
+                    <div class="vaptcha-init-main">
+                        <div class="vaptcha-init-loading">
+                            <a href="https://vaptcha.com" target="_blank">
+                                <img src="https://cdn.vaptcha.com/vaptcha-loading.gif" />
+                            </a>
+                            <span class="vaptcha-text">VAPTCHA启动中...</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-success btn-sm btn btn-block validate">验证</button>
+                <button class="btn-primary btn-sm btn btn-block reset">重置</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.vaptcha.com/v2.js"></script>
+    <script>
+        vaptcha({
+            vid: '*****', // 验证单元id
+            type: 'click', // 显示类型 点击式
+            container: '.vaptcha-container', // 按钮容器，可为Element 或者 selector
+            mode: 'DownTime',
+            outage: '/server/outage.php'
+        }).then(function (vaptchaObj) {
+            vaptchaObj.render()// 调用验证实例 vpObj 的 render 方法加载验证按钮
+            $('.reset').click(vaptchaObj.reset.bind(vaptchaObj))
+            $('.validate').click(function () {
+                $.post('/server/validate.php', {
+                    token: vaptchaObj.getToken()
+                }, function(result) {
+                    $('.alert')
+                    .text(result.msg)
+                    .removeClass('alert-success')
+                    .removeClass('alert-danger')
+                    .addClass(result.code ? 'alert-success' : 'alert-danger')
+                    .show();
+                }, 'json')
+            })
+        })
+    </script>
+</body>
+
+</html>
