@@ -185,4 +185,4 @@ if (getSession('token')) {
 ```
 
 ## 官网文档地址
-地址: [https://www.vaptcha.com/document/install#downtime](https://www.vaptcha.com/document/install#downtime)
+地址: [https://www.vaptcha.com/document/install#header-n0](https://www.vaptcha.com/document/install#header-n0)
